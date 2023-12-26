@@ -317,6 +317,7 @@ static void receivePayment (int n)
         perror ("error on the down operation for semaphore access (WT)");
         exit (EXIT_FAILURE);
     }
+    groupRecord[n] = DONE;
     sh->fSt.assignedTable[n] = -1;
     int next;
     if (sh->fSt.groupsWaiting > 0){

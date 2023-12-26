@@ -216,6 +216,7 @@ static void processOrder ()
 
     sh->fSt.waiterRequest = ret;
     
+    
     if (semUp (semgid, WAITERREQUEST) == -1) {                                                      /* enter critical region */
         perror ("error on the up operation for semaphore access (PT)");
         exit (EXIT_FAILURE);
