@@ -311,7 +311,21 @@ static void waitFood (int id)
         exit (EXIT_FAILURE);
     }
 
+    //preso aqui
     if (semDown (semgid, sh->foodArrived[sh->fSt.assignedTable[id]]) == -1) {                                                  /* enter critical region */
+        perror ("error on the down operation for semaphore access (CT)");
+        exit (EXIT_FAILURE);
+    }
+
+    if (semDown (semgid, MUTEX) == -1) {                                                  /* enter critical region */
+        perror ("error on the down operation for semaphore access (CT)");
+        exit (EXIT_FAILURE);
+    }
+
+    sh->fSt.st.groupStat[id] = 8;
+    saveState(nFic, &sh->fSt);
+    
+    if (semUp (semgid, MUTEX) == -1) {                                                  /* enter critical region */
         perror ("error on the down operation for semaphore access (CT)");
         exit (EXIT_FAILURE);
     }

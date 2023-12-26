@@ -143,7 +143,6 @@ static void waitForOrder ()
         exit (EXIT_FAILURE);
     }
 
-
     //TODO insert your code here
     if (semDown (semgid, WAITORDER) == -1) {                                                      /* enter critical region */
         perror ("error on the up operation for semaphore access (PT)");
@@ -207,7 +206,9 @@ static void processOrder ()
         perror ("error on the up operation for semaphore access (PT)");
         exit (EXIT_FAILURE);
     }
-
+    
+    //TODO insert your code here
+    //preso aqui
     if (semDown (semgid, WAITERREQUESTPOSSIBLE) == -1) {                                                      /* enter critical region */
         perror ("error on the up operation for semaphore access (PT)");
         exit (EXIT_FAILURE);
@@ -220,10 +221,5 @@ static void processOrder ()
         exit (EXIT_FAILURE);
     }
 
-
-
-
-
-    //TODO insert your code here
 }
 

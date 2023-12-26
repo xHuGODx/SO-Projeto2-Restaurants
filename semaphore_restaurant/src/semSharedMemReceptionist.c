@@ -154,7 +154,7 @@ static int decideTableOrWait(int n)
         for (int j = 0; j < NUMTABLES; j++){
             if (sh->fSt.assignedTable[i] == j){
                 av[j] = 1;
-                break;
+                continue;
             }
         }
     }
@@ -162,6 +162,7 @@ static int decideTableOrWait(int n)
     for (int j = 0; j < NUMTABLES; j++){
         if (av[j] == 0) {table = j; break;}
     }
+    free(av);
     return table;
 }
 
@@ -177,7 +178,7 @@ static int decideNextGroup()
 {
     int ret, id = -1;
     for (int i = 0; i < MAXGROUPS; i++){
-        if (sh->fSt.st.groupStat[i] == ATRECEPTION){
+        if (groupRecord[i] == WAIT){
             ret = decideTableOrWait(i);
             if (ret != -1) id = i;
             break;
@@ -219,15 +220,13 @@ static request waitForGroup()
         exit (EXIT_FAILURE);
     }
 
-    ret = sh->fSt.receptionistRequest;
-
     if (semDown (semgid, sh->mutex) == -1)  {                                                  /* enter critical region */
         perror ("error on the up operation for semaphore access (WT)");
         exit (EXIT_FAILURE);
     }
 
     // TODO insert your code here
-
+    ret = sh->fSt.receptionistRequest;
 
     if (semUp (semgid, sh->mutex) == -1) {                                                  /* exit critical region */
      perror ("error on the down operation for semaphore access (WT)");
@@ -264,17 +263,17 @@ static void provideTableOrWaitingRoom (int n)
     sh->fSt.st.receptionistStat = ASSIGNTABLE;
     saveState(nFic, &sh->fSt);
 
-
+    sh->fSt.groupsWaiting++;
+    groupRecord[n] = WAIT;
     int table = decideTableOrWait(n);
     if (table != -1){
+        sh->fSt.groupsWaiting--;
+        groupRecord[n] = ATTABLE;
         sh->fSt.assignedTable[n] = table;
         if (semUp (semgid, sh->waitForTable[n]) == -1) {                                               /* exit critical region */
             perror ("error on the down operation for semaphore access (WT)");
             exit (EXIT_FAILURE);
         }
-    }
-    else {
-        sh->fSt.groupsWaiting++;
     }
     saveState(nFic, &sh->fSt);
 
@@ -323,8 +322,8 @@ static void receivePayment (int n)
     if (sh->fSt.groupsWaiting > 0){
         next = decideNextGroup();
         if (next != -1){
-            sh->fSt.groupsWaiting--;
             provideTableOrWaitingRoom(next);
+            if (groupRecord[next] == ATTABLE) sh->fSt.groupsWaiting--;
         }
     }
 
