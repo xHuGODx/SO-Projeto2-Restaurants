@@ -77,8 +77,6 @@ static void printHeader(FILE *fic, FULL_STAT *p_fSt)
         fprintf(fic," %s%02d","T",g);
     }
 
-    fprintf(fic,"%3s", "FO");
-
     fprintf(fic,"\n");
 }
 
@@ -149,8 +147,6 @@ void saveState (char nFic[], FULL_STAT *p_fSt)
             fprintf(fic,"%4s",".");
         }
     }
-    fprintf(fic, "%3d", p_fSt->foodOrder);
-
 
     fprintf(fic,"\n");
 

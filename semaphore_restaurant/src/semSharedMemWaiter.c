@@ -164,7 +164,7 @@ static request waitForClientOrChef()
 
     // TODO insert your code here
     req = sh->fSt.waiterRequest;
-    sh->fSt.foodOrder = (req.reqType == FOODREQ) ? 1 : 0;
+    sh->fSt.foodOrder -= (req.reqType == FOODREADY) ? 1 : 0;
 
 
     if (semUp (semgid, sh->mutex) == -1) {                                                  /* exit critical region */

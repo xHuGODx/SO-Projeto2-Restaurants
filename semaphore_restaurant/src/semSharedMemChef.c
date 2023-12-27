@@ -191,6 +191,10 @@ static void processOrder ()
     ret.reqGroup = lastGroup;
     ret.reqType = FOODREADY;
 
+    if (semDown (semgid, WAITERREQUESTPOSSIBLE) == -1) {                                                      /* enter critical region */
+        perror ("error on the up operation for semaphore access (PT)");
+        exit (EXIT_FAILURE);
+    }
 
     if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
         perror ("error on the up operation for semaphore access (PT)");
@@ -199,6 +203,7 @@ static void processOrder ()
 
     //TODO insert your code here
     sh->fSt.st.chefStat = REST;
+    sh->fSt.waiterRequest = ret;
     saveState(nFic, &sh->fSt);
 
 
@@ -207,16 +212,7 @@ static void processOrder ()
         exit (EXIT_FAILURE);
     }
     
-    //TODO insert your code here
-    //preso aqui
-    if (semDown (semgid, WAITERREQUESTPOSSIBLE) == -1) {                                                      /* enter critical region */
-        perror ("error on the up operation for semaphore access (PT)");
-        exit (EXIT_FAILURE);
-    }
-
-    sh->fSt.waiterRequest = ret;
-    
-    
+    //TODO insert your code here  
     if (semUp (semgid, WAITERREQUEST) == -1) {                                                      /* enter critical region */
         perror ("error on the up operation for semaphore access (PT)");
         exit (EXIT_FAILURE);

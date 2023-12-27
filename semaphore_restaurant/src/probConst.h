@@ -16,7 +16,7 @@
 /** \brief maximum number of groups */
 #define  MAXGROUPS       16 
 /** \brief number of tables */
-#define  NUMTABLES        3 
+#define  NUMTABLES        2 
 /** \brief controls time taken to cook */
 #define  MAXCOOK        100
 

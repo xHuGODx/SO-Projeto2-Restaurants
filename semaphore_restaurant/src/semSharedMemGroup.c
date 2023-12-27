@@ -252,6 +252,7 @@ static void orderFood (int id)
         exit (EXIT_FAILURE);
     }
 
+    sh->fSt.foodOrder++;
     sh->fSt.st.groupStat[id] = FOOD_REQUEST;
     saveState(nFic, &sh->fSt);
 
@@ -261,8 +262,8 @@ static void orderFood (int id)
         perror ("error on the up operation for semaphore access (CT)");
         exit (EXIT_FAILURE);
     }
-
-    while (sh->fSt.foodOrder == 1){}
+    
+    while (sh->fSt.foodOrder >= 3){}
     if (semDown (semgid, WAITERREQUESTPOSSIBLE) == -1) {                                                  /* enter critical region */
         perror ("error on the down operation for semaphore access (CT)");
         exit (EXIT_FAILURE);
@@ -307,13 +308,13 @@ static void waitFood (int id)
     saveState(nFic, &sh->fSt);
     // TODO insert your code here
 
-    if (semUp (semgid, sh->mutex) == -1) {                                                  /* enter critical region */
+    if (semUp (semgid, sh->mutex) == -1) {                                                  /* exit critical region */
         perror ("error on the down operation for semaphore access (CT)");
         exit (EXIT_FAILURE);
     }
 
     //preso aqui
-    if (semDown (semgid, sh->foodArrived[sh->fSt.assignedTable[id]]) == -1) {                                                  /* enter critical region */
+    if (semDown (semgid, sh->foodArrived[sh->fSt.assignedTable[id]]) == -1) {                                     
         perror ("error on the down operation for semaphore access (CT)");
         exit (EXIT_FAILURE);
     }
@@ -322,7 +323,7 @@ static void waitFood (int id)
 
     // TODO insert your code here
 
-    if (semDown (semgid, sh->mutex) == -1) {                                                  /* enter critical region */
+    if (semDown (semgid, sh->mutex) == -1) {                                     
         perror ("error on the down operation for semaphore access (CT)");
         exit (EXIT_FAILURE);
     }
