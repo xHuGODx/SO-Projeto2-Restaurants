@@ -144,7 +144,7 @@ static void waitForOrder ()
     }
 
     //TODO insert your code here
-    if (semDown (semgid, WAITORDER) == -1) {                                                      /* enter critical region */
+    if (semDown (semgid, WAITORDER) == -1) {                                                     
         perror ("error on the up operation for semaphore access (PT)");
         exit (EXIT_FAILURE);
     }
@@ -165,7 +165,7 @@ static void waitForOrder ()
         exit (EXIT_FAILURE);
     }
 
-    if (semUp (semgid, ORDERRECEIVED) == -1) {                                                      /* exit critical region */
+    if (semUp (semgid, ORDERRECEIVED) == -1) {                                                     
         perror ("error on the up operation for semaphore access (PT)");
         exit (EXIT_FAILURE);
     }
@@ -191,7 +191,7 @@ static void processOrder ()
     ret.reqGroup = lastGroup;
     ret.reqType = FOODREADY;
 
-    if (semDown (semgid, WAITERREQUESTPOSSIBLE) == -1) {                                                      /* enter critical region */
+    if (semDown (semgid, WAITERREQUESTPOSSIBLE) == -1) {                                                      
         perror ("error on the up operation for semaphore access (PT)");
         exit (EXIT_FAILURE);
     }
@@ -213,7 +213,7 @@ static void processOrder ()
     }
     
     //TODO insert your code here  
-    if (semUp (semgid, WAITERREQUEST) == -1) {                                                      /* enter critical region */
+    if (semUp (semgid, WAITERREQUEST) == -1) {                                                     
         perror ("error on the up operation for semaphore access (PT)");
         exit (EXIT_FAILURE);
     }

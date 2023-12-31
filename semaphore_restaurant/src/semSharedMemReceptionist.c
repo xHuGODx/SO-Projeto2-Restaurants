@@ -324,7 +324,7 @@ static void receivePayment (int n)
         next = decideNextGroup();
         if (next != -1){
             provideTableOrWaitingRoom(next);
-            if (groupRecord[next] == ATTABLE) sh->fSt.groupsWaiting--;
+            sh->fSt.groupsWaiting--;
         }
     }
 

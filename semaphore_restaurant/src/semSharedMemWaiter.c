@@ -143,6 +143,7 @@ static request waitForClientOrChef()
     }
 
     // TODO insert your code here
+    sh->fSt.foodOrder = 0;
     sh->fSt.st.waiterStat = WAIT_FOR_REQUEST;
     saveState(nFic, &sh->fSt);
     
@@ -164,7 +165,7 @@ static request waitForClientOrChef()
 
     // TODO insert your code here
     req = sh->fSt.waiterRequest;
-    sh->fSt.foodOrder -= (req.reqType == FOODREADY) ? 1 : 0;
+    sh->fSt.foodOrder = (req.reqType == FOODREQ) ? 1 : 0;
 
 
     if (semUp (semgid, sh->mutex) == -1) {                                                  /* exit critical region */
@@ -217,13 +218,12 @@ static void informChef (int n)
     sh->fSt.foodGroup = n;
 
 
-    if (semUp (semgid, WAITORDER) == -1)                                                   /* exit critical region */
+    if (semUp (semgid, WAITORDER) == -1)                                                   
     { perror ("error on the down operation for semaphore access (WT)");
         exit (EXIT_FAILURE);
     }
 
-    //preso aqui
-    if (semDown (semgid, ORDERRECEIVED) == -1)  {                                                  /* enter critical region */
+    if (semDown (semgid, ORDERRECEIVED) == -1)  {                                                 
         perror ("error on the up operation for semaphore access (WT)");
         exit (EXIT_FAILURE);
     }
